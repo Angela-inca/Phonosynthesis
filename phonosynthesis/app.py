@@ -1,13 +1,26 @@
 from flask import Flask, abort, jsonify, request, render_template
 from phonosynthesis import ipa_data
 from phonosynthesis import phonosynth
-
+from urllib.request import urlopen as uReq
+from bs4 import BeautifulSoup as soup
+import json
 app = Flask(__name__, static_url_path='')
 app.config.from_envvar('PHONOSYNTHESIS_CONFIG')
 
 @app.route('/')
 def handle_homepage():
-  return render_template('index.html')
+   datadict = {}
+   url = 'https://github.com/shraddhabarke/Phonosynthesis/tree/master/datasets'
+   uClient = uReq(url)
+   html = uClient.read()
+   uClient.close()
+   page_soup = soup(html, "html.parser")
+   containers = page_soup.findAll("tr",{"class":"js-navigation-item"})
+   del containers[0]
+   for container in containers:
+      datadict.update({container.a["title"]:container.a["href"]}) 
+   return render_template('index.html',datalist = datadict)
+   
 
 @app.route('/api/infer_rule', methods=['POST'])
 def handle_infer_rule():

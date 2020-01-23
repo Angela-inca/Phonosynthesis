@@ -4,10 +4,14 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Phonosynth Demo</title>
+<title>Phonosynth Demo (ERSP Version)</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+<div id="loading-screen-backdrop" class="loading-screen backdrop">
+  <div class="loading-screen text">. . . Loading, Please be Patient! . . .</div>
+</div>
 
 <body class="grid-container">
   {% if config['ENV'] == 'development' %}
@@ -15,13 +19,34 @@
   {% endif %}
   <h1>Phonosynth Demo</h1>
   <ul id="rules" class="callout">
-    <li>Upload a file and infer a rule
+    <li>Upload or select a file and infer a rule
   </ul>
   <div class="grid-x align-justify">
     <label for="csv-upload" class="button cell small-2">
       Upload file
       <input id="csv-upload" type="file" class="show-for-sr">
     </label>
+    
+
+    <!-- ERSP: New Input Dropdown to Directly Accesss GitHub Files -->
+    <select id="csv-upload-github" class="csv-upload-github">
+      <option value = ""></option>
+    </select>
+        
+        <script>
+            var data = JSON.parse('{{ datalist | tojson | safe}}');
+            var select = document.getElementById("csv-upload-github")
+
+            //create a dynamic dropdown menu based on the arr
+             for(var key in data){
+                var option = document.createElement("OPTION"),
+                    txt = document.createTextNode(key);
+                option.appendChild(txt);
+                option.setAttribute("value",key);
+                select.insertBefore(option,select.lastChild);
+             }
+        </script>
+        
     <button id="infer" type="button" class="button cell small-2">Infer rule</button>
   </div>
   <table id="word-stems" class="row">
@@ -40,3 +65,66 @@
     $(document).foundation();
   </script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+  <!-- ERSP: JavaScript for Custom DropDown -->
+  <script>
+    // $(document).ready(function() {
+    //   baseUrl = "https://github.com/CatoThe1stElder/Phonosynthesis/tree/master/datasets";
+    //   $.ajax({
+    //     url: baseUrl,
+    //     type: "get",
+    //     dataType: "",
+    //     success: function(data) {
+    //       //do something with data and save as csv file
+    //     }
+    //   });
+    // });
+
+    // Create the XHR object.
+    function createCORSRequest(method, url) {
+      var xhr = new XMLHttpRequest();
+      if ("withCredentials" in xhr) {
+        // XHR for Chrome/Firefox/Opera/Safari.
+        xhr.open(method, url, true);
+      } else if (typeof XDomainRequest != "undefined") {
+        // XDomainRequest for IE.
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+      } else {
+        // CORS not supported.
+        xhr = null;
+      }
+      return xhr;
+    }
+
+    // Helper method to parse the title tag from the response.
+    function getTitle(text) {
+      return text.match('<title>(.*)?</title>')[1];
+    }
+
+    // Make the actual CORS request.
+    function makeCorsRequest() {
+      // This is a sample server that supports CORS.
+      var url = 'https://github.com/CatoThe1stElder/Phonosynthesis/tree/master/datasets';
+
+      var xhr = createCORSRequest('GET', url);
+      if (!xhr) {
+        alert('CORS not supported');
+        return;
+      }
+
+      // Response handlers.
+      xhr.onload = function() {
+        var text = xhr.responseText;
+        var title = getTitle(text);
+        alert('Response from CORS request to ' + url + ': ' + title);
+      };
+
+      xhr.onerror = function() {
+        alert('Woops, there was an error making the request.');
+      };
+
+      xhr.send();
+    }
+   
+  </script>

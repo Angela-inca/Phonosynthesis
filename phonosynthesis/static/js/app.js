@@ -11,6 +11,11 @@ function populateWordStems() {
 }
 
 function renderRules(rules) {
+
+  // ERSP: Deactivate Loading Notification
+  document.getElementById("loading-screen-backdrop").style.display = "none";
+  console.log("%c Loading-screen Backdrop Activated!", "background: beige; color: purple;");
+
   function renderPhone(phone) {
     let phoneString = '';
 
@@ -61,7 +66,19 @@ $('#csv-upload').change(function () {
   reader.readAsText(file);
 });
 
+// ERSP: Dropdown Menu for GitHub datasets HTML Element
+$('#csv-upload-github').change(function () {
+  console.log("%c Change of the HTML element 'csv-select-github'", "background: beige; color: purple;");
+});
+
+
 $('#infer').click(() => {
+
+  // ERSP: Activate Loading Notification
+  document.getElementById("loading-screen-backdrop").style.display = "initial";
+  console.log("%c Loading-screen Backdrop Activated!", "background: beige; color: purple;");
+
+
   let wordStems = [];
 
   $('#word-stems > tbody > tr').each(function (row) {
