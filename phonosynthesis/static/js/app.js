@@ -61,6 +61,13 @@ $('#csv-upload').change(function () {
   reader.readAsText(file);
 });
 
+$('#csv-upload-local').change(function () {
+  
+
+});
+
+
+
 $('#infer').click(() => {
   let wordStems = [];
 

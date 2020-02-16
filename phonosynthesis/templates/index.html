@@ -22,6 +22,24 @@
       Upload file
       <input id="csv-upload" type="file" class="show-for-sr">
     </label>
+
+    <!-- ERSP: New Input Dropdown to Directly Accesss GitHub Files -->
+    <select id="csv-upload-local">
+      <script>
+        var select = document.getElementById("csv-upload-local")
+        let name = '{{fileName| tojson}}'
+        let refined = JSON.parse(name)
+        for(var i = 0; i < refined.length; i++){
+          var option = document.createElement("OPTION");
+          var text = document.createTextNode(refined[i]);
+          option.appendChild(text);
+          select.insertBefore(option, select.lastChild);
+        }
+
+      </script>
+  
+    </select>
+    
     <button id="infer" type="button" class="button cell small-2">Infer rule</button>
   </div>
   <table id="word-stems" class="row">
