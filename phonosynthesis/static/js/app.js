@@ -61,16 +61,9 @@ $('#csv-upload').change(function () {
   reader.readAsText(file);
 });
 
-$('#csv-upload-local').change(function () {
-  
-
-});
-
-
 
 $('#infer').click(() => {
   let wordStems = [];
-
   $('#word-stems > tbody > tr').each(function (row) {
     let data = $('td', this);
     wordStems.push({
@@ -78,7 +71,6 @@ $('#infer').click(() => {
       realization: $(data[1]).text()
     });
   });
-
   let payload = {
     wordStems: wordStems
   };

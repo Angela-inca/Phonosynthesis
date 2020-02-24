@@ -24,21 +24,32 @@
     </label>
 
     <!-- ERSP: New Input Dropdown to Directly Accesss GitHub Files -->
-    <select id="csv-upload-local">
+    <form name="Item_1" action="results.html" method='POST'>
+      <select 
+      id="csv-upload-local" onchange="getSelectValue();">
+        <option></option>
+        <script>
+          var select = document.getElementById("csv-upload-local")
+          let name = '{{fileName| tojson}}'
+          let refined = JSON.parse(name)
+          for(var i = 0; i < refined.length; i++){
+            var option = document.createElement("OPTION");
+            var text = document.createTextNode(refined[i]);
+            option.appendChild(text);
+            select.insertBefore(option, select.lastChild);
+          }
+        </script>
+      </select>
+      <button type="submit">Compare!</button>
       <script>
-        var select = document.getElementById("csv-upload-local")
-        let name = '{{fileName| tojson}}'
-        let refined = JSON.parse(name)
-        for(var i = 0; i < refined.length; i++){
-          var option = document.createElement("OPTION");
-          var text = document.createTextNode(refined[i]);
-          option.appendChild(text);
-          select.insertBefore(option, select.lastChild);
+        function getSelectValue(){
+          let selectedValue = document.getElementById("csv-upload-local").value;
+          path = os.path.join("../datasets/" + selectedValue + ".csv")
+          f = open(path,"r")
+          content = f.read()
         }
-
       </script>
-  
-    </select>
+  </form>
     
     <button id="infer" type="button" class="button cell small-2">Infer rule</button>
   </div>

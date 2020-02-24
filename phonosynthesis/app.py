@@ -4,19 +4,23 @@ from phonosynthesis import phonosynth
 from pathlib import Path
 import os
 
-
 app = Flask(__name__, static_url_path='')
 app.config.from_envvar('PHONOSYNTHESIS_CONFIG')
 
 @app.route('/')
 def handle_homepage():
-  address = []
-  fileName = []
   for root, dirs, files in os.walk('./datasets'):
+    address = []
+    fileName = []
     for file in files:
         address.append(os.path.join(root,file))
         fileName.append(file.replace('.csv',''))
   return render_template('index.html',address = address, fileName = fileName)
+
+@app.route("/test" , methods=['GET', 'POST'])
+def test():
+    select = request.form.get('comp_select')
+    return(str(select)) # just to see what select is
 
 @app.route('/api/infer_rule', methods=['POST'])
 def handle_infer_rule():
